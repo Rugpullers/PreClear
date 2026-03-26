@@ -4,31 +4,36 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 384; 
+const TOTAL_FRAMES = 384;
 
 // Define Narrative Sections and frame ranges (Approx 96 frames per video)
 const SCENES = [
-  { 
-    start: 0, end: 0.25, 
-    title: "PreClear AI", 
-    tagline: "Navigating the Urban Flow",
-    layout: 'center' 
+  {
+    start: 0, end: 0.15,
+    title: "PreClear",
+    tagline: "Clearing the way before chaos begins",
+    layout: 'center'
   },
-  { 
-    start: 0.25, end: 0.50, 
-    topLeft: "1.2 Billion Hours Lost Yearly...", 
-    bottomRight: "...in inefficient traffic gridlock.",
+  {
+    start: 0.15, end: 0.30,
+    topLeft: "1.2 BILLION HOURS LOST EVERY YEAR",
+    bottomRight: "...TO TRAFFIC THAT WAS NEVER MEANT TO EXIST",
     layout: 'split'
   },
-  { 
-    start: 0.50, end: 0.75, 
-    topLeft: "Predicting Congestion Before It Happens.", 
-    bottomRight: "Prioritizing ambulances at every turn.",
+  {
+    start: 0.30, end: 0.55,
+    topLeft: "PREDICTING CONGESTION BEFORE IT HAPPENS.",
+    bottomRight: "PRIORITIZING EMERGENCY VEHICLES AT EVERY TURN.",
     layout: 'split'
   },
-  { 
-    start: 0.75, end: 1.0, 
+  {
+    start: 0.55, end: 0.70,
     title: "Here is how we are solving this.",
+    layout: 'center'
+  },
+  {
+    start: 0.70, end: 1.0,
+    title: "",
     layout: 'center'
   }
 ];
@@ -56,7 +61,7 @@ const ScrollAnimation: React.FC = () => {
         };
         img.onerror = () => {
           console.error(`Failed to load frame_${frameNum}.jpg`);
-          loadedCount++; 
+          loadedCount++;
         };
         loadedImages.push(img);
       }
@@ -73,27 +78,30 @@ const ScrollAnimation: React.FC = () => {
     if (!context) return;
 
     const render = (progress: number) => {
-      // Storytelling Logic: 4 Scenes
-      // Each scene (25%) is divided into:
-      // 0% - 60% : Video Motion + Text Fade-in
-      // 60% - 90% : PAUSE (Video stops, text stays fully visible) - "1 second pause" equivalent
-      // 90% - 100%: Text Fade-out transition
-      
+      // Storytelling Logic: 4 Scenes, each 25% of scroll
+      // Scenes 0-2: Animate to 70% of segment → FREEZE (text visible) → resume to 100%
+      // Scene 3: Text appears briefly → fades out → frames play linearly (red → green)
+
       const sceneIndex = Math.min(Math.floor(progress * 4), 3);
       const sceneStart = sceneIndex * 0.25;
       const progressInScene = (progress - sceneStart) / 0.25; // 0.0 to 1.0
 
-      // Calculate Frame Index with a "Freeze" zone between 0.6 and 0.9
       let frameSubProgress;
-      if (progressInScene < 0.6) {
-        // Linear motion for the first 60% of the scene duration
-        frameSubProgress = progressInScene / 0.6;
-      } else if (progressInScene < 0.9) {
-        // FREEZE: Keep the last frame of the motion segment
-        frameSubProgress = 1.0;
+      if (sceneIndex < 3) {
+        // Scenes 0-2: animate to 70% of segment, freeze, then resume
+        if (progressInScene < 0.4) {
+          // Advance frames to 70% of this video segment
+          frameSubProgress = (progressInScene / 0.4) * 0.7;
+        } else if (progressInScene < 0.8) {
+          // FREEZE at 70% — text is fully visible here
+          frameSubProgress = 0.7;
+        } else {
+          // Resume from 70% to 100% to transition into next scene
+          frameSubProgress = 0.7 + ((progressInScene - 0.8) / 0.2) * 0.3;
+        }
       } else {
-        // Transition: Briefly stay on the final frame before the next scene starts
-        frameSubProgress = 1.0;
+        // Scene 3: play all frames linearly (red → green transition)
+        frameSubProgress = progressInScene;
       }
 
       const frameIndex = Math.floor((sceneIndex + frameSubProgress) * 96);
@@ -146,13 +154,20 @@ const ScrollAnimation: React.FC = () => {
   }, [isLoaded, images]);
 
   const getSceneStyle = (index: number) => {
-    // Opacity Logic: 
-    // In from 0.1, Full at 0.3, Hold until 0.9, Out by 1.0
     let opacity = 0;
     if (activeScene === index) {
-      if (sceneProgress < 0.2) opacity = sceneProgress / 0.2;
-      else if (sceneProgress < 0.9) opacity = 1;
-      else opacity = 1 - (sceneProgress - 0.9) / 0.1;
+      if (index === 3) {
+        // Scene 4 (traffic light): text appears briefly then vanishes
+        if (sceneProgress < 0.1) opacity = sceneProgress / 0.1;
+        else if (sceneProgress < 0.35) opacity = 1;
+        else if (sceneProgress < 0.45) opacity = 1 - (sceneProgress - 0.35) / 0.1;
+        else opacity = 0; // No text — just the red→green animation
+      } else {
+        // Scenes 0-2: fade in, hold during freeze, fade out
+        if (sceneProgress < 0.2) opacity = sceneProgress / 0.2;
+        else if (sceneProgress < 0.85) opacity = 1;
+        else opacity = 1 - (sceneProgress - 0.85) / 0.1;
+      }
     }
 
     return {
@@ -171,7 +186,7 @@ const ScrollAnimation: React.FC = () => {
   return (
     <div ref={containerRef} style={{ height: '1400vh', position: 'relative', background: '#000' }}>
       <div style={{ position: 'sticky', top: 0, left: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
-        
+
         {/* Narrative Overlays */}
         {SCENES.map((scene, i) => (
           <div key={i} style={getSceneStyle(i)}>
