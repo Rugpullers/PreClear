@@ -1,0 +1,106 @@
+/* AboutPage.css — Plain text, single column, single viewport */
+
+.about-page-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    font-family: "Source Sans Pro", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.about-content {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 620px;
+    text-align: center;
+    padding: 1.5em 2em;
+    background: rgba(30, 39, 46, 0.1);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    backdrop-filter: blur(10px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.2em;
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: aboutFadeIn 0.5s ease-out;
+}
+
+@keyframes aboutFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Title */
+.about-content .about-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #ffffff;
+    justify-content: center;
+    margin: 0 0 0.45em;
+}
+
+/* Sections */
+.about-section {
+    margin-bottom: 0.35em;
+    text-align: left;
+}
+
+.about-section h2 {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.1em;
+}
+
+.about-section p {
+    font-size: 0.78em;
+    line-height: 1.4;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Features list */
+.about-features {
+    list-style-type: disc;
+    padding: 15px;
+    margin: 0.1em 0 0;
+}
+
+.about-features li {
+    font-size: 0.78em;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+/* Back button */
+.about-back-btn {
+    display: inline-block;
+    margin-top: 0.55em;
+    padding: 0.4em 1.8em;
+    background: rgba(78, 184, 221, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.4em;
+    font-size: 0.85em;
+    color: #ffffff;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease-out;
+}
+
+.about-back-btn:hover {
+    background: rgba(78, 184, 221, 0.8);
+    transform: translateY(-1px);
+}
