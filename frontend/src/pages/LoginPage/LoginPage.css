@@ -1,0 +1,231 @@
+/* LoginPage.css — Dark Glassmorphism */
+
+.login-page-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    font-size: 16px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Background is handled by the <Clouds /> component */
+}
+
+.login-page-container form {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: rgba(30, 39, 46, 0.1);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    backdrop-filter: blur(10px) saturate(120%);
+    margin: 10px;
+    padding: 1.5em 2em;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.2em;
+    font-family: "Source Sans Pro", sans-serif;
+    z-index: 10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.login-page-container .svgContainer {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 0.75em;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.login-page-container .svgContainer div {
+    position: relative;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    padding-bottom: 100%;
+}
+
+.login-page-container .svgContainer .mySVG {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.login-page-container .svgContainer:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: inherit;
+    height: inherit;
+    box-sizing: border-box;
+    border: solid 2.5px rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+}
+
+.login-page-container .inputGroup {
+    margin: 0 0 1.25em;
+    padding: 0;
+    position: relative;
+}
+
+.login-page-container .inputGroup:last-of-type {
+    margin-bottom: 0;
+}
+
+.login-page-container label {
+    margin: 0 0 12px;
+    display: block;
+    font-size: 1.25em;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    font-family: inherit;
+}
+
+.login-page-container input[type=email],
+.login-page-container input[type=text],
+.login-page-container input[type=password] {
+    display: block;
+    margin: 0;
+    padding: 0.875em 1em 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: solid 1px rgba(255, 255, 255, 0.6);
+    border-radius: 0.5em;
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 65px;
+    font-size: 1.55em;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-family: inherit;
+    transition: box-shadow 0.2s linear, border-color 0.25s ease-out, background-color 0.25s ease-out;
+}
+
+.login-page-container input[type=email]:focus,
+.login-page-container input[type=text]:focus,
+.login-page-container input[type=password]:focus {
+    outline: none;
+    box-shadow: 0px 2px 15px rgba(78, 184, 221, 0.2);
+    border: solid 1px rgba(78, 184, 221, 0.6);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.login-page-container input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.login-page-container button {
+    display: block;
+    margin: 0;
+    padding: 0.65em 1em 1em;
+    background: linear-gradient(135deg, rgba(78, 184, 221, 0.7), rgba(33, 112, 147, 0.7));
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.5em;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 65px;
+    font-size: 1.55em;
+    color: #FFF;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all 0.3s ease-out;
+    cursor: pointer;
+}
+
+.login-page-container button:hover,
+.login-page-container button:active {
+    background: linear-gradient(135deg, rgba(78, 184, 221, 0.9), rgba(33, 112, 147, 0.9));
+    box-shadow: 0 6px 20px rgba(78, 184, 221, 0.3);
+    transform: translateY(-1px);
+}
+
+.login-page-container .helper {
+    position: absolute;
+    z-index: 1;
+    font-family: inherit;
+}
+
+.login-page-container .helper1 {
+    top: 0;
+    left: 0;
+    transform: translate(1em, 2.2em) scale(1);
+    transform-origin: 0 0;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 1.55em;
+    font-weight: 400;
+    opacity: 0.65;
+    pointer-events: none;
+    transition: transform 0.2s ease-out, opacity 0.2s linear;
+}
+
+.login-page-container .inputGroup1.focusWithText .helper1 {
+    transform: translate(1em, 1.55em) scale(0.6);
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle {
+    display: block;
+    padding: 0 0 0 1.45em;
+    position: absolute;
+    top: 0.25em;
+    right: 0;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle .indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.85em;
+    width: 0.85em;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: solid 1.5px rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle .indicator:after {
+    content: "";
+    position: absolute;
+    left: 0.25em;
+    top: 0.025em;
+    width: 0.2em;
+    height: 0.5em;
+    border: solid rgba(255, 255, 255, 0.9);
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    visibility: hidden;
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle input:checked~.indicator:after {
+    visibility: visible;
+}
+
+.login-page-container .inputGroup2 #showPasswordToggle input:focus~.indicator,
+.login-page-container .inputGroup2 #showPasswordToggle input:hover~.indicator {
+    border-color: rgba(78, 184, 221, 0.6);
+}
