@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/preclear
+      - ML_SERVICE_URL=http://ml-service:8001
+  ml-service:
+    build: ./ml-service
+    ports:
+      - "8001:8001"
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
