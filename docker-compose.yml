@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  # ── MongoDB App Database ───────────────────────────────────
+  mongodb_app:
+    image: mongo:7
+    container_name: mongodb_app
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongodb_app_data:/data/db
+    networks:
+      - traffic-net
+    restart: unless-stopped
+
+  # ── MongoDB ML Database ────────────────────────────────────
+  mongodb_ml:
+    image: mongo:7
+    container_name: mongodb_ml
+    command: mongod --port 27018
+    ports:
+      - "27020:27018"
+    volumes:
+      - mongodb_ml_data:/data/db
+    networks:
+      - traffic-net
+    restart: unless-stopped
+
+  # ── ML Service ─────────────────────────────────────────────
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: ml-service
+    ports:
+      - "8086:8001"
+    environment:
+      - MONGO_ML_URL=mongodb://mongodb_ml:27018
+      - MONGO_ML_DB=traffic_ml
+      - MODEL_PATH=ml_service/model/xgboost_traffic_congestion.json
+      - FEATURE_MEANS_PATH=ml_service/model/feature_means.json
+    depends_on:
+      - mongodb_ml
+    networks:
+      - traffic-net
+    restart: unless-stopped
+
+  # ── Backend Service ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8085:8000"
+    environment:
+      - MONGO_APP_URL=mongodb://mongodb_app:27017
+      - MONGO_APP_DB=traffic_app
+      - ML_SERVICE_URL=http://ml-service:8001
+    depends_on:
+      - mongodb_app
+      - ml-service
+    networks:
+      - traffic-net
+    restart: unless-stopped
+
+# ── Volumes ────────────────────────────────────────────────
+volumes:
+  mongodb_app_data:
+  mongodb_ml_data:
+
+# ── Network ────────────────────────────────────────────────
+networks:
+  traffic-net:
+    driver: bridge

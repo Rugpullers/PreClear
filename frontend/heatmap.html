@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Heatmap — Intelligent Traffic Management</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0e1a;
+            color: #e0e0e0;
+        }
+
+        .leaflet-routing-container {
+            display: none !important;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f1629 0%, #1a1f3a 100%);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2a2f4a;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        #map {
+            width: 100%;
+            height: calc(100vh - 120px);
+        }
+
+        .controls, .routing-controls {
+            background: #0f1629;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #1a1f3a;
+            flex-wrap: wrap;
+        }
+
+        .routing-controls select {
+            padding: 6px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #7c3aed;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            border: 1px solid #7c3aed;
+            background: transparent;
+            color: #c4b5fd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn.active {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-high { background: #ef4444; }
+        .legend-medium { background: #f59e0b; }
+        .legend-low { background: #22c55e; }
+
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15, 22, 41, 0.95);
+            border: 1px solid #2a2f4a;
+            border-radius: 10px;
+            padding: 16px;
+            z-index: 1000;
+            min-width: 220px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-panel h3 {
+            color: #00d4ff;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1f3a;
+        }
+
+        .ws-log {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 22, 41, 0.95);
+            border: 1px solid #2a2f4a;
+            border-radius: 10px;
+            padding: 12px;
+            z-index: 1000;
+            width: 320px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .ws-log h3 {
+            color: #7c3aed;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid #1a1f3a;
+            color: #94a3b8;
+        }
+
+        .log-entry.high { color: #ef4444; }
+        .log-entry.medium { color: #f59e0b; }
+        .log-entry.low { color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🚦 Intelligent Traffic Heatmap</h1>
+        <div class="status-bar">
+            <div class="status-dot" id="wsStatus"></div>
+            <span id="wsStatusText">Connecting...</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn active" onclick="refreshHeatmap()">🔄 Refresh</button>
+        <button class="btn" id="autoRefreshBtn" onclick="toggleAutoRefresh()">⏱ Auto-Refresh: OFF</button>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot legend-high"></div> HIGH</div>
+            <div class="legend-item"><div class="legend-dot legend-medium"></div> MEDIUM</div>
+            <div class="legend-item"><div class="legend-dot legend-low"></div> LOW</div>
+        </div>
+    <div class="routing-controls">
+        <span style="font-size: 0.85rem; color: #a5b4fc;">📍 Source:</span>
+        <select id="routeSource">
+            <option value="Silk Board Junction">Silk Board Junction</option>
+            <option value="Marathahalli Bridge">Marathahalli Bridge</option>
+            <option value="Whitefield Main Rd">Whitefield Main Rd</option>
+            <option value="Hebbal Flyover">Hebbal Flyover</option>
+            <option value="Electronic City Flyover">Electronic City Flyover</option>
+            <option value="Outer Ring Road & Bellandur">Outer Ring Road & Bellandur</option>
+            <option value="KR Puram Junction">KR Puram Junction</option>
+            <option value="Sarjapur Junction">Sarjapur Junction</option>
+            <option value="MG Road & Brigade Rd">MG Road & Brigade Rd</option>
+            <option value="Bannerghatta Rd">Bannerghatta Rd</option>
+        </select>
+
+        <span style="font-size: 0.85rem; color: #a5b4fc;">➡️ Destination:</span>
+        <select id="routeDestination">
+            <option value="Hebbal Flyover" selected>Hebbal Flyover</option>
+            <option value="Silk Board Junction">Silk Board Junction</option>
+            <option value="Marathahalli Bridge">Marathahalli Bridge</option>
+            <option value="Whitefield Main Rd">Whitefield Main Rd</option>
+            <option value="Electronic City Flyover">Electronic City Flyover</option>
+            <option value="Outer Ring Road & Bellandur">Outer Ring Road & Bellandur</option>
+            <option value="KR Puram Junction">KR Puram Junction</option>
+            <option value="Sarjapur Junction">Sarjapur Junction</option>
+            <option value="MG Road & Brigade Rd">MG Road & Brigade Rd</option>
+            <option value="Bannerghatta Rd">Bannerghatta Rd</option>
+        </select>
+
+        <button class="btn" style="background:#7c3aed; color:white; font-weight:bold;" onclick="findRoute()">🔍 Find Fastest Route</button>
+        <span id="routeTime" style="font-size: 0.85rem; color: #22c55e; font-weight: bold; margin-left: 10px;"></span>
+    </div>
+
+    <div id="map"></div>
+
+    <div class="info-panel" id="infoPanel">
+        <h3>📊 Traffic Summary</h3>
+        <div class="info-row"><span>Total Points:</span> <span id="totalPoints">0</span></div>
+        <div class="info-row"><span>Last Updated:</span> <span id="lastUpdate">—</span></div>
+        <div class="info-row"><span>WebSocket:</span> <span id="wsConnected">Disconnected</span></div>
+    </div>
+
+    <div class="ws-log" id="wsLog">
+        <h3>📡 Live Feed</h3>
+        <div id="logEntries"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <!-- Leaflet Heatmap Plugin -->
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+    <script>
+        const BACKEND_URL = 'http://localhost:8085';
+        const WS_URL = 'ws://localhost:8085/ws/traffic';
+
+        // Initialize map centered on Bangalore
+        const map = L.map('map').setView([12.9716, 77.5946], 12);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap © CARTO',
+            maxZoom: 19,
+        }).addTo(map);
+
+        let heatLayer = null;
+        let autoRefreshInterval = null;
+        let ws = null;
+        let routeLayer = null;
+
+        // ── Routing ────────────────────────────────────────
+        async function findRoute() {
+            const src = document.getElementById('routeSource').value;
+            const dest = document.getElementById('routeDestination').value;
+            const timeLabel = document.getElementById('routeTime');
+
+            if (src === dest) {
+                alert("Source and destination cannot be the same.");
+                return;
+            }
+
+            timeLabel.textContent = "Calculating...";
+            
+            try {
+                const res = await fetch(`${BACKEND_URL}/calculate-route?source=${encodeURIComponent(src)}&destination=${encodeURIComponent(dest)}`);
+                if (!res.ok) throw new Error("Failed to find route");
+                const data = await res.json();
+                
+                timeLabel.textContent = `Est. Time: ${data.total_estimated_time_mins} mins`;
+
+                // Draw path adhering to real roads using OSRM routing machine
+                if (routeLayer) {
+                    map.removeControl(routeLayer);
+                }
+                
+                const waypoints = [];
+                // Push first node coords
+                if (data.route_segments.length > 0) {
+                    waypoints.push(L.latLng(data.route_segments[0].from_lat, data.route_segments[0].from_lng));
+                }
+                
+                data.route_segments.forEach(segment => {
+                    waypoints.push(L.latLng(segment.to_lat, segment.to_lng));
+                });
+
+                routeLayer = L.Routing.control({
+                    waypoints: waypoints,
+                    lineOptions: {
+                        styles: [{color: '#00d4ff', opacity: 0.9, weight: 6, className: 'animate-route'}]
+                    },
+                    createMarker: function() { return null; }, // Hide default markers
+                    show: false, // Hide turn-by-turn text panel
+                    addWaypoints: false,
+                    routeWhileDragging: false,
+                    fitSelectedRoutes: true
+                }).addTo(map);
+
+            } catch (e) {
+                console.error(e);
+                timeLabel.textContent = "Error calculating route";
+                timeLabel.style.color = "#ef4444";
+            }
+        }
+
+        // ── Heatmap ────────────────────────────────────────
+        async function refreshHeatmap() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/traffic-heatmap`);
+                const data = await res.json();
+
+                if (heatLayer) map.removeLayer(heatLayer);
+
+                heatLayer = L.layerGroup().addTo(map);
+                data.forEach(point => {
+                    let lat = point[0], lng = point[1], intensity = point[2];
+                    let color = '#22c55e'; // LOW is green
+                    if (intensity >= 1.0) color = '#ef4444'; // HIGH is red
+                    else if (intensity >= 0.6) color = '#f59e0b'; // MEDIUM is yellow
+                    
+                    // Outer glowing halo
+                    L.circleMarker([lat, lng], {
+                        radius: 30,
+                        fillColor: color,
+                        color: color,
+                        weight: 0,
+                        fillOpacity: 0.35
+                    }).addTo(heatLayer);
+                    
+                    // Inner solid dot
+                    L.circleMarker([lat, lng], {
+                        radius: 10,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 2,
+                        fillOpacity: 0.9
+                    }).addTo(heatLayer);
+                });
+
+                document.getElementById('totalPoints').textContent = data.length;
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            } catch (e) {
+                console.error('Failed to fetch heatmap:', e);
+            }
+        }
+
+        function toggleAutoRefresh() {
+            const btn = document.getElementById('autoRefreshBtn');
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                btn.textContent = '⏱ Auto-Refresh: OFF';
+                btn.classList.remove('active');
+            } else {
+                autoRefreshInterval = setInterval(refreshHeatmap, 5000);
+                btn.textContent = '⏱ Auto-Refresh: ON';
+                btn.classList.add('active');
+            }
+        }
+
+        // ── WebSocket ──────────────────────────────────────
+        function connectWebSocket() {
+            ws = new WebSocket(WS_URL);
+
+            ws.onopen = () => {
+                document.getElementById('wsStatus').style.background = '#22c55e';
+                document.getElementById('wsStatusText').textContent = 'Connected';
+                document.getElementById('wsConnected').textContent = 'Connected';
+                addLogEntry('WebSocket connected', 'low');
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'traffic_update') {
+                    const level = data.traffic_level.toLowerCase();
+                    addLogEntry(
+                        `${data.location_id}: ${data.traffic_level} (Signal: ${data.green_time}s)`,
+                        level
+                    );
+                    // Auto-refresh heatmap on new data
+                    refreshHeatmap();
+                } else if (data.type === 'emergency_override') {
+                    addLogEntry(
+                        `🚨 EMERGENCY: ${data.location_id} — ${data.message}`,
+                        'high'
+                    );
+                }
+            };
+
+            ws.onclose = () => {
+                document.getElementById('wsStatus').style.background = '#ef4444';
+                document.getElementById('wsStatusText').textContent = 'Disconnected';
+                document.getElementById('wsConnected').textContent = 'Disconnected';
+                addLogEntry('WebSocket disconnected — reconnecting in 3s...', 'high');
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            ws.onerror = (err) => {
+                console.error('WebSocket error:', err);
+            };
+        }
+
+        function addLogEntry(text, level) {
+            const container = document.getElementById('logEntries');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${level}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+            container.prepend(entry);
+            // Keep max 50 entries
+            while (container.children.length > 50) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        // ── Init ───────────────────────────────────────────
+        refreshHeatmap();
+        connectWebSocket();
+    </script>
+</body>
+</html>

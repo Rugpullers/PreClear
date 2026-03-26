@@ -1,0 +1,14 @@
+temp/
+__pycache__/
+*.pyc
+.env
+*.joblib
+*.pkl
+venv/
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/
+node_modules/
+.DS_Store
