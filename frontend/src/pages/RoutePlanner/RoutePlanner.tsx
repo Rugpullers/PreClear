@@ -79,7 +79,7 @@ const RoutePlanner = () => {
     };
 
     const handleAmbulance = () => {
-        alert('🚑 Ambulance priority mode — all signals on your route will be cleared!');
+        alert('🚑 Ambulance priority mode — Your route has been sent to the traffic signal monitoring authorities, to aid your journey');
     };
 
     return (
@@ -165,8 +165,8 @@ const RoutePlanner = () => {
                                                         i === 0
                                                             ? '#22c55e'
                                                             : i === result.path.length - 1
-                                                            ? '#ef4444'
-                                                            : '#4eb8dd',
+                                                                ? '#ef4444'
+                                                                : '#4eb8dd',
                                                 }}
                                             />
                                             <span className="rp-path-name">{node}</span>
@@ -176,7 +176,7 @@ const RoutePlanner = () => {
                                                     style={{
                                                         borderColor:
                                                             IMPACT_COLORS[
-                                                                result.route_segments[i].congestion_impact
+                                                            result.route_segments[i].congestion_impact
                                                             ] || '#666',
                                                     }}
                                                 >
@@ -188,7 +188,7 @@ const RoutePlanner = () => {
                                                         style={{
                                                             background:
                                                                 IMPACT_COLORS[
-                                                                    result.route_segments[i].congestion_impact
+                                                                result.route_segments[i].congestion_impact
                                                                 ] || '#666',
                                                         }}
                                                     >

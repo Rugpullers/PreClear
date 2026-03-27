@@ -84,28 +84,29 @@ const ScrollAnimation: React.FC = () => {
       // Scenes 0-2: Animate to 70% of segment → FREEZE (text visible) → resume to 100%
       // Scene 3: Text appears briefly → fades out → frames play linearly (red→green)
 
-      const sceneIndex = Math.min(Math.floor(progress * 4), 3);
+      const sceneIndex = Math.min(Math.floor(progress * 4), 3) || 0;
       const sceneStart = sceneIndex * 0.25;
       const progressInScene = (progress - sceneStart) / 0.25; // 0.0 to 1.0
 
       // Easing helpers for smooth decel/accel into/out of freeze
-      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-      const easeInCubic = (t: number) => t * t * t;
+      // Quartic easing for even softer transitions
+      const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+      const easeInQuart = (t: number) => t * t * t * t;
 
       let frameSubProgress;
       if (sceneIndex < 3) {
         // Scenes 0-2: animate to 70%, smoothly hold, then smoothly resume to 100%
-        if (progressInScene < 0.4) {
-          // Ease-out: frames decelerate smoothly into the freeze point
-          const t = progressInScene / 0.4; // 0→1
-          frameSubProgress = easeOutCubic(t) * 0.7;
+        if (progressInScene < 0.45) {
+          // Decelerate smoothly into the freeze point
+          const t = progressInScene / 0.45; // 0→1
+          frameSubProgress = easeOutQuart(t) * 0.7;
         } else if (progressInScene < 0.8) {
           // HOLD at 70% — text is fully visible here
           frameSubProgress = 0.7;
         } else {
-          // Ease-in: frames accelerate smoothly out of the freeze
+          // Accelerate smoothly out of the freeze
           const t = (progressInScene - 0.8) / 0.2; // 0→1
-          frameSubProgress = 0.7 + easeInCubic(t) * 0.3;
+          frameSubProgress = 0.7 + easeInQuart(t) * 0.3;
         }
       } else {
         // Scene 3: play all frames linearly (red→green transition)
@@ -116,8 +117,7 @@ const ScrollAnimation: React.FC = () => {
       const clampedIndex = Math.min(Math.max(frameIndex, 0), TOTAL_FRAMES - 1);
 
       const img = images[clampedIndex];
-      if (img && img.complete && img.naturalWidth > 0) {
-        // Use CSS pixel dimensions for layout (context is scaled by DPR)
+      if (img && img.complete) {
         const displayWidth = window.innerWidth;
         const displayHeight = window.innerHeight;
         const cropBottomPercent = 0.07;
@@ -132,11 +132,8 @@ const ScrollAnimation: React.FC = () => {
           centerShift_x, centerShift_y, img.width * ratio, effectiveHeight * ratio);
       }
 
-      // Track states for the overlay UI
       setActiveScene(sceneIndex);
       setSceneProgress(progressInScene);
-
-      // Hide the fixed viewport when animation is fully complete
       setAnimationDone(progress >= 0.995);
     };
 
@@ -144,7 +141,6 @@ const ScrollAnimation: React.FC = () => {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-      // Scale the drawing context so coordinates still map to CSS pixels
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       render(0);
     };
@@ -158,11 +154,12 @@ const ScrollAnimation: React.FC = () => {
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.5,
+        scrub: 2.8,
         onUpdate: (self: any) => render(self.progress),
       },
       ease: 'none',
     });
+
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
@@ -207,7 +204,7 @@ const ScrollAnimation: React.FC = () => {
 
 
   return (
-    <div ref={containerRef} style={{ height: '1400vh', position: 'relative', background: '#000' }}>
+    <div ref={containerRef} style={{ height: '2500vh', position: 'relative', background: '#000' }}>
       {/* Fixed viewport — pins to screen during the entire scroll, hides when done */}
       <div style={{
         position: 'fixed',

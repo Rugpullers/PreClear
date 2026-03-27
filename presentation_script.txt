@@ -1,0 +1,70 @@
+# 🚦 PreClear AI — Presentation Script
+# Tone: Interactive, Humorous, Engaging
+# Estimated Duration: 2:45 minutes
+
+[START]
+
+(Presenter stands in front, gesturing to the Landing Page - http://localhost:5173/)
+
+PRESENTER:
+"Good morning everyone! Quick question to start... Raise your hand if you’ve ever sat at a red light, at 2 AM, when there wasn’t a single other car in sight?"
+
+(PAUSE - wait for hands)
+
+PRESENTER:
+"Exactly. We’ve all been there. And how did that make you feel? Like a productive member of society? Or like the universe was personally testing your patience?"
+
+(PAUSE - chuckle)
+
+PRESENTER:
+"Well, today, we’re ending that. Welcome to PreClear AI — the brain your city's traffic signals never had."
+
+(SCROLL DOWN the landing page - show the animations)
+
+PRESENTER:
+"Now, another obvious one. If an ambulance is behind you, and there's 5 miles of bumper-to-bumper traffic, what do you do? A) Magically levitate? B) Delete the traffic? Or C) Watch helplessly as precious minutes tick away?"
+
+(PAUSE)
+
+PRESENTER:
+"The answer is C... until now. Let’s move to the Live Heatmap."
+
+(NAVIGATE to http://localhost:5173/traffic-data)
+
+PRESENTER:
+"Look at this. This isn't just a pretty map. Those colors—Green, Yellow, Red—are updating every 5 seconds. We’re currently feeding data from a dataset of 15,000 real-world records."
+
+(Wait for a marker to change color - Point it out!)
+
+PRESENTER:
+"See that? Hebbal Flyover just went from Red to Green. Why? Because our AI predicted the surge and cleared it. We don't just react to traffic; we *delete* it before it becomes your problem."
+
+(NAVIGATE to http://localhost:5173/route-planner)
+
+PRESENTER:
+"But let's talk about *your* commute. Let's plan a route from Hebbal to Silk Board. Now, normally, Google Maps would say 'Good luck, you'll be home by Tuesday.'"
+
+(SELECT Hebbal and Silk Board - CLICK "Find Optimal Route")
+
+PRESENTER:
+"But PreClear uses an A* routing algorithm integrated with our LightGBM and LSTM models. It’s analyzing the congestion *segments* in real-time. See those badges? We’re choosing the path with the least resistance."
+
+(PAUSE - dramatic effect)
+
+PRESENTER:
+"And finally, the 'God Mode'. The Ambulance button."
+
+(CLICK the 🚑 Ambulance button)
+
+PRESENTER:
+"When an emergency is detected, it’s not just about a siren. It’s about communication. PreClear forces a 'Green Corridor' along this exact path, clearing the road so that help arrives *zero* seconds late."
+
+(CLOSING)
+
+PRESENTER:
+"So, to wrap up: Do we want to keep sitting at lights waiting for a sign? Or do we want a city that actually *thinks* for us? I think the answer is pretty obvious."
+
+PRESENTER:
+"I'm from the PreClear Team, and we’re here to make sure you never have to levitate your car again. Any questions?"
+
+[END]
