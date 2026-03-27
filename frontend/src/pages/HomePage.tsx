@@ -8,17 +8,25 @@ import LoadingOverlay from "../components/LoadingOverlay/LoadingOverlay";
 function HomePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
   const closeSidebar = () => setIsSidebarOpen(false);
 
   const handleLoginClick = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate("/login");
-    }, 2000);
+    if (isLoggedIn) {
+      // Already logged in → logout (just toggle state, no navigation)
+      setIsLoggedIn(false);
+    } else {
+      // Not logged in → navigate to login page, mark as logged in on return
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsLoggedIn(true);
+        navigate("/login");
+      }, 2000);
+    }
   };
 
   const handleRoutePlannerClick = () => {
@@ -52,6 +60,7 @@ function HomePage() {
         toggleSidebar={toggleSidebar}
         isSidebarOpen={isSidebarOpen}
         onLoginClick={handleLoginClick}
+        isLoggedIn={isLoggedIn}
       />
       <Sidebar
         isOpen={isSidebarOpen}

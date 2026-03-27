@@ -3,9 +3,10 @@ import './AnimatedLoginButton.css';
 
 interface AnimatedLoginButtonProps {
     onClick?: () => void;
+    isLoggedIn?: boolean;
 }
 
-const AnimatedLoginButton: React.FC<AnimatedLoginButtonProps> = ({ onClick }) => {
+const AnimatedLoginButton: React.FC<AnimatedLoginButtonProps> = ({ onClick, isLoggedIn = false }) => {
     const [state, setState] = useState('default');
     const [isClicked, setIsClicked] = useState(false);
     const [isDoorSlammed, setIsDoorSlammed] = useState(false);
@@ -139,7 +140,7 @@ const AnimatedLoginButton: React.FC<AnimatedLoginButtonProps> = ({ onClick }) =>
                 <path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z" />
                 <circle cx="66" cy="50" r="3.7" />
             </svg>
-            <span className="button-text">Login</span>
+            <span className="button-text">{isLoggedIn ? 'Logout' : 'Login'}</span>
         </button>
     );
 };

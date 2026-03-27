@@ -95,19 +95,14 @@ const ScrollAnimation: React.FC = () => {
 
       let frameSubProgress;
       if (sceneIndex < 3) {
-        // Scenes 0-2: animate to 70%, smoothly hold, then smoothly resume to 100%
-        if (progressInScene < 0.45) {
-          // Decelerate smoothly into the freeze point
-          const t = progressInScene / 0.45; // 0→1
-          frameSubProgress = easeOutQuart(t) * 0.7;
-        } else if (progressInScene < 0.8) {
-          // HOLD at 70% — text is fully visible here
-          frameSubProgress = 0.7;
-        } else {
-          // Accelerate smoothly out of the freeze
-          const t = (progressInScene - 0.8) / 0.2; // 0→1
-          frameSubProgress = 0.7 + easeInQuart(t) * 0.3;
-        }
+        // No hard freeze — frames continuously advance but slow down
+        // in the middle of each scene where text is visible, then speed up again.
+        // This uses a smooth S-curve (ease-in-out quartic) so the frames
+        // crawl through the 40%-70% range, giving text time to read,
+        // but never fully stop.
+        const easeInOutQuart = (t: number) =>
+          t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+        frameSubProgress = easeInOutQuart(progressInScene);
       } else {
         // Scene 3: play all frames linearly (red→green transition)
         frameSubProgress = progressInScene;
@@ -154,7 +149,7 @@ const ScrollAnimation: React.FC = () => {
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 2.8,
+        scrub: 3.5,
         onUpdate: (self: any) => render(self.progress),
       },
       ease: 'none',
@@ -175,15 +170,22 @@ const ScrollAnimation: React.FC = () => {
     if (activeScene === index) {
       if (index === 3) {
         // Scene 4 (traffic light): text appears briefly then vanishes
-        if (sceneProgress < 0.1) opacity = sceneProgress / 0.1;
-        else if (sceneProgress < 0.85) opacity = 1;
-        else if (sceneProgress < 0.95) opacity = 1 - (sceneProgress - 0.85) / 0.1;
-        else opacity = 0; // No text — just the red→green animation
+        if (sceneProgress < 0.15) opacity = sceneProgress / 0.15;
+        else if (sceneProgress < 0.5) opacity = 1;
+        else if (sceneProgress < 0.6) opacity = 1 - (sceneProgress - 0.5) / 0.1;
+        else opacity = 0;
       } else {
-        // Scenes 0-2: fade in, hold during freeze, fade out
-        if (sceneProgress < 0.2) opacity = sceneProgress / 0.2;
-        else if (sceneProgress < 0.85) opacity = 1;
-        else opacity = 1 - (sceneProgress - 0.85) / 0.1;
+        // Scenes 0-2:
+        // 0%-15%   → no text (transition in)
+        // 15%-25%  → text fades in
+        // 25%-50%  → text fully visible
+        // 50%-60%  → text fades out
+        // 60%-100% → no text (transition out)
+        if (sceneProgress < 0.0001) opacity = 0;
+        else if (sceneProgress < 0.10) opacity = (sceneProgress - 0.05) / 0.1;
+        else if (sceneProgress < 0.25) opacity = 1;
+        else if (sceneProgress < 0.35) opacity = 1 - (sceneProgress - 0.25) / 0.1;
+        else opacity = 0;
       }
     }
 
@@ -204,7 +206,7 @@ const ScrollAnimation: React.FC = () => {
 
 
   return (
-    <div ref={containerRef} style={{ height: '2500vh', position: 'relative', background: '#000' }}>
+    <div ref={containerRef} style={{ height: '2100vh', position: 'relative', background: '#000' }}>
       {/* Fixed viewport — pins to screen during the entire scroll, hides when done */}
       <div style={{
         position: 'fixed',

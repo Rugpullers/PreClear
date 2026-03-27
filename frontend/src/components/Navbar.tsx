@@ -6,9 +6,10 @@ interface Props {
     toggleSidebar: () => void;
     isSidebarOpen: boolean;
     onLoginClick: () => void;
+    isLoggedIn: boolean;
 }
 
-const Navbar: React.FC<Props> = ({ toggleSidebar, isSidebarOpen, onLoginClick }) => {
+const Navbar: React.FC<Props> = ({ toggleSidebar, isSidebarOpen, onLoginClick, isLoggedIn }) => {
     return (
         <nav className="navbar">
             {/* Hamburger menu */}
@@ -34,7 +35,7 @@ const Navbar: React.FC<Props> = ({ toggleSidebar, isSidebarOpen, onLoginClick })
             </div>
 
             {/* Animated login button */}
-            <AnimatedLoginButton onClick={onLoginClick} />
+            <AnimatedLoginButton onClick={onLoginClick} isLoggedIn={isLoggedIn} />
         </nav>
     );
 };

@@ -344,3 +344,76 @@
         min-height: 400px;
     }
 }
+
+/* ── "PreClear says" Modal ───────────────────────────── */
+.preclear-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.preclear-modal {
+    background: rgba(20, 30, 48, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(78, 184, 221, 0.25);
+    border-radius: 16px;
+    padding: 28px 32px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(78, 184, 221, 0.08);
+    animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+    from { transform: scale(0.9) translateY(10px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.preclear-modal-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(78, 184, 221, 0.8);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preclear-modal-body {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 24px;
+}
+
+.preclear-modal-ok {
+    display: block;
+    margin-left: auto;
+    padding: 8px 32px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #4eb8dd, #2170a3);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(78, 184, 221, 0.3);
+}
+
+.preclear-modal-ok:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(78, 184, 221, 0.5);
+}

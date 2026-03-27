@@ -78,8 +78,10 @@ const RoutePlanner = () => {
         }
     };
 
+    const [showAmbulanceModal, setShowAmbulanceModal] = useState(false);
+
     const handleAmbulance = () => {
-        alert('🚑 Ambulance priority mode — Your route has been sent to the traffic signal monitoring authorities, to aid your journey');
+        setShowAmbulanceModal(true);
     };
 
     return (
@@ -223,6 +225,21 @@ const RoutePlanner = () => {
                     </div>
                 </div>
             </div>
+
+            {/* ── Custom "PreClear says" Modal ───────── */}
+            {showAmbulanceModal && (
+                <div className="preclear-modal-overlay" onClick={() => setShowAmbulanceModal(false)}>
+                    <div className="preclear-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="preclear-modal-header">PreClear says</div>
+                        <div className="preclear-modal-body">
+                            🚑 Ambulance priority mode — Your route has been sent to the traffic signal monitoring authorities, to aid your journey
+                        </div>
+                        <button className="preclear-modal-ok" onClick={() => setShowAmbulanceModal(false)}>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
