@@ -1,29 +1,25 @@
-import { useState } from "react";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import Footer from "./components/Footer";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import RoutePlanner from "./pages/RoutePlanner/RoutePlanner";
+import TrafficData from "./pages/TrafficData/TrafficData";
+import AboutPage from "./pages/AboutPage/AboutPage";
+import ScrollAnimation from "./components/ScrollAnimation";
 import "./App.css";
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   return (
     <div className="app-container">
-
-      {/* 🔥 DYNAMIC BACKGROUND AREA */}
-      {/* TODO: Add your dynamic background animation here */}
-      {/* Example: canvas / particles / gradient animation */}
-      <div className="background-layer"></div>
-
-      <Navbar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-
-      <Sidebar isOpen={isSidebarOpen} />
-
-      <main className="main-content">
-
-      </main>
-
-      <Footer />
+      <Routes>
+        {/* Scroll animation intro — "Get Started" button at the end navigates to /home */}
+        <Route path="/" element={<ScrollAnimation />} />
+        {/* Full landing page with Navbar, Sidebar, Clouds, features, etc. */}
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/route-planner" element={<RoutePlanner />} />
+        <Route path="/traffic-data" element={<TrafficData />} />
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
     </div>
   );
 }

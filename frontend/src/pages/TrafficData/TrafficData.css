@@ -1,0 +1,150 @@
+/* TrafficData.css — Full-screen Heatmap with Clouds + Glassmorphism */
+
+.td-page {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.td-layout {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 16px 20px;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+/* ── Controls bar (glassmorphism) ───────────────────────── */
+.glass-bar {
+    background: rgba(30, 39, 46, 0.12);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.9em;
+    padding: 0.7em 1.4em;
+    box-shadow:
+        0 10px 30px -8px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.td-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.td-title {
+    margin: 0;
+    font-size: 1.15em;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    white-space: nowrap;
+}
+
+.td-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.td-btn {
+    padding: 0.4em 0.9em;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5em;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.82em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.td-btn:hover {
+    background: rgba(78, 184, 221, 0.25);
+    border-color: rgba(78, 184, 221, 0.5);
+    color: #fff;
+}
+
+.td-btn--active {
+    background: rgba(78, 184, 221, 0.3);
+    border-color: rgba(78, 184, 221, 0.6);
+    color: #4eb8dd;
+}
+
+.td-btn--loading {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.td-legend {
+    display: flex;
+    gap: 14px;
+    margin-left: auto;
+}
+
+.td-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78em;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.td-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* ── Map wrapper ────────────────────────────────────────── */
+.td-map-wrapper {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ── Info panel (overlaid on map) ────────────────────────── */
+.td-info-panel {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1000;
+    background: rgba(15, 22, 41, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 14px 18px;
+    min-width: 190px;
+    font-size: 0.82rem;
+    color: #e0e0e0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.td-info-panel h4 {
+    color: #00d4ff;
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.td-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.td-info-row:last-child {
+    border-bottom: none;
+}
