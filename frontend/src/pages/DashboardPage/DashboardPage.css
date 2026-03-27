@@ -261,8 +261,10 @@
 }
 
 .dash-table-name {
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.9);
+    font-weight: 700;
+    color: #000;
+    white-space: nowrap;
+    min-width: 100px;
 }
 
 .dash-table-empty {

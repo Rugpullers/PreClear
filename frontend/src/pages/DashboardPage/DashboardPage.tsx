@@ -24,11 +24,18 @@ const DashboardPage = () => {
             const res = await fetch(`${API_BASE}/traffic-heatmap`);
             const data = await res.json();
             if (data.success && Array.isArray(data.data)) {
-                const stats: JunctionStat[] = data.data.map((j: any) => ({
-                    name: j.junction,
-                    density: j.density ?? Math.round(Math.random() * 100),
-                    status: j.congestion_level || 'LOW',
-                }));
+                const stats: JunctionStat[] = data.data.map((j: any) => {
+                    const avg = j.avg_vehicles ?? 0;
+                    let status: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
+                    if (avg > 400) status = 'HIGH';
+                    else if (avg > 200) status = 'MEDIUM';
+                    const density = Math.min(Math.round((avg / 600) * 100), 100);
+                    return {
+                        name: j.junction_id || j.junction || '—',
+                        density,
+                        status,
+                    };
+                });
                 setJunctionStats(stats);
                 setTotalJunctions(stats.length);
                 setActiveAlerts(stats.filter((s) => s.status === 'HIGH').length);
