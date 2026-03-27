@@ -171,4 +171,4 @@ Frontend runs at `http://localhost:5173`
 ## 👥 Team & Contribution
 Developed during a high-stakes hackathon by the PreClear Team.
 
-**License**: [MIT](LICENSE)
+**License**: [APACHE 2.0](LICENSE)
