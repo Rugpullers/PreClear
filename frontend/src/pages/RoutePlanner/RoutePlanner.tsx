@@ -3,7 +3,8 @@ import Clouds from '../../components/Clouds';
 import TrafficMap, { RouteResult, HeatmapJunction } from '../../components/Map/TrafficMap';
 import './RoutePlanner.css';
 
-const API_BASE = 'http://localhost:8000';
+import { API_BASE } from '../../config';
+
 
 const IMPACT_COLORS: Record<string, string> = {
     LOW: '#22c55e',

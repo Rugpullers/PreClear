@@ -14,6 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code and model files
 COPY . .
 
+# Fix Windows CRLF line endings in model files (LightGBM requires LF)
+RUN sed -i 's/\r$//' model/*.txt
+
 # Expose port
 EXPOSE 8001
 

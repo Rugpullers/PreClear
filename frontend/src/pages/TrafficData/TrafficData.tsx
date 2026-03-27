@@ -3,7 +3,8 @@ import Clouds from '../../components/Clouds';
 import TrafficMap, { HeatmapJunction } from '../../components/Map/TrafficMap';
 import './TrafficData.css';
 
-const API_BASE = 'http://localhost:8000';
+import { API_BASE } from '../../config';
+
 
 const TrafficData = () => {
     const [heatmapData, setHeatmapData] = useState<HeatmapJunction[]>([]);
