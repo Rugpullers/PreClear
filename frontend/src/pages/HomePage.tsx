@@ -37,6 +37,14 @@ function HomePage() {
     }, 2000);
   };
 
+  const handleTrafficDataClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/traffic-data");
+    }, 2000);
+  };
+
   return (
     <>
       <Clouds />
@@ -49,6 +57,7 @@ function HomePage() {
         isOpen={isSidebarOpen}
         closeSidebar={closeSidebar}
         onRoutePlannerClick={handleRoutePlannerClick}
+        onTrafficDataClick={handleTrafficDataClick}
         onAboutClick={handleAboutClick}
       />
       <main className="main-content">

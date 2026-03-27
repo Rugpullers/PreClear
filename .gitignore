@@ -12,3 +12,21 @@ venv.bak/
 node_modules/
 dist/
 .DS_Store
+
+# ML training materials (large files — not needed in repo)
+ML Materials/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Docker volumes
+mongo-data/

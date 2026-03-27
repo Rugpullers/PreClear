@@ -4,10 +4,11 @@ interface Props {
     isOpen: boolean;
     closeSidebar: () => void;
     onRoutePlannerClick: () => void;
+    onTrafficDataClick: () => void;
     onAboutClick: () => void;
 }
 
-const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, onAboutClick }) => {
+const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, onTrafficDataClick, onAboutClick }) => {
     return (
         <>
             {/* Overlay — click to close sidebar */}
@@ -20,7 +21,7 @@ const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, o
             <aside className={`sidebar ${isOpen ? "open" : ""}`}>
                 <ul>
                     <li onClick={closeSidebar}>Dashboard</li>
-                    <li>Traffic Data</li>
+                    <li onClick={onTrafficDataClick}>Traffic Data</li>
                     <li onClick={onRoutePlannerClick}>Route Planner</li>
                     <li onClick={onAboutClick}>About</li>
                     <li>Settings</li>

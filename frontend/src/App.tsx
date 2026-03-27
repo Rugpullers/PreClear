@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RoutePlanner from "./pages/RoutePlanner/RoutePlanner";
+import TrafficData from "./pages/TrafficData/TrafficData";
 import AboutPage from "./pages/AboutPage/AboutPage";
 import ScrollAnimation from "./components/ScrollAnimation";
 import "./App.css";
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/route-planner" element={<RoutePlanner />} />
+        <Route path="/traffic-data" element={<TrafficData />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </div>

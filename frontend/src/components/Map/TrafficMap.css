@@ -1,0 +1,104 @@
+/* ── Leaflet base overrides ───────────────────────────────── */
+@import 'leaflet/dist/leaflet.css';
+
+.traffic-map-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.8em;
+    overflow: hidden;
+    position: relative;
+}
+
+.traffic-map-wrapper .leaflet-container {
+    width: 100%;
+    height: 100%;
+    background: #0a0e1a;
+}
+
+/* Fix Leaflet default marker icon path issue in bundlers */
+.leaflet-default-icon-path {
+    background-image: none;
+}
+
+/* ── Junction tooltip ─────────────────────────────────────── */
+.leaflet-tooltip.junction-tooltip {
+    background: rgba(15, 22, 41, 0.92);
+    border: 1px solid #2a2f4a;
+    color: #e0e0e0;
+    font-size: 0.8rem;
+    font-family: 'Outfit', 'Inter', sans-serif;
+    padding: 6px 10px;
+    border-radius: 6px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Map info panel overlay ───────────────────────────────── */
+.map-info-panel {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1000;
+    background: rgba(15, 22, 41, 0.92);
+    border: 1px solid #2a2f4a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    min-width: 200px;
+    font-size: 0.82rem;
+    color: #e0e0e0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.map-info-panel h4 {
+    color: #00d4ff;
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.map-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.map-info-row:last-child {
+    border-bottom: none;
+}
+
+/* ── Legend ────────────────────────────────────────────────── */
+.map-legend {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    gap: 12px;
+    background: rgba(15, 22, 41, 0.88);
+    border: 1px solid #2a2f4a;
+    border-radius: 8px;
+    padding: 8px 14px;
+    backdrop-filter: blur(8px);
+}
+
+.map-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.map-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* ── Hide Leaflet routing machine text panel ──────────────── */
+.leaflet-routing-container {
+    display: none !important;
+}

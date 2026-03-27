@@ -13,13 +13,16 @@
 Automatically identifies emergency vehicles and calculates the shortest, most efficient route. It forces signals to **GREEN** along the path while blocking cross-traffic to ensure zero delays.
 
 ### 🤖 2. ML-Based Congestion Forecasting
-Uses a **Random Forest Classifier** trained on 7 key features (vehicle count, speed, weather, events, etc.) to predict congestion levels (Smooth, Moderate, Heavy) in real-time.
+Uses **LightGBM** and **LSTM** models trained on 15,000+ Bangalore traffic records to predict congestion levels (Low, Medium, High) in real-time with 95%+ confidence.
 
-### 🔄 3. Multi-Junction Signal Coordination
-Instead of isolated signals, PreClear AI coordinates timing across multiple junctions to prevent the "ripple effect" of traffic bottlenecks.
+### 🗺️ 3. A* Optimal Routing
+Calculates the fastest route between 10 Bangalore junctions using A* pathfinding with a haversine heuristic. Edge weights are dynamically penalized based on **live ML predictions** — meaning routes adapt as congestion changes.
 
-### 🗺️ 4. Interactive Live Map
-A high-performance Leaflet-based visualization engine showing real-time traffic density, signal states, and active emergency routes.
+### 🔥 4. Live Traffic Heatmap
+Real-time Leaflet-based visualization with auto-refreshing junction markers that change between 🟢 LOW, 🟡 MEDIUM, and 🔴 HIGH as the data feeder cycles through the dataset.
+
+### 🗺️ 5. Interactive Route Planner
+Split-panel dashboard with a glassmorphism form and a dark-themed Leaflet map. Routes are drawn on real roads via OSRM, with color-coded congestion badges per segment.
 
 ---
 
@@ -27,38 +30,66 @@ A high-performance Leaflet-based visualization engine showing real-time traffic 
 
 ```mermaid
 graph LR
-    Sim[Traffic Simulation Engine] -->|REST/WS| BE[FastAPI Backend]
-    BE -->|Telemetry| DB[(MongoDB)]
-    
-    subgraph Prediction
-        ML[ML Prediction Service]
-    end
-    
-    subgraph UI
-        FE[Leaflet Frontend]
-    end
-
-    BE -->|Feature Vector| ML
-    ML -->|Congestion 0-2| BE
-    BE -->|Signal Timing| FE
-    FE -->|User Overrides| BE
+    FE[React Frontend<br/>Leaflet Maps] -->|REST| BE[FastAPI Backend<br/>Port 8000]
+    BE -->|Feature Vector| ML[ML Service<br/>Port 8001]
+    ML -->|Prediction| BE
+    BE -->|Read/Write| DB[(MongoDB<br/>Port 27017)]
+    BE -->|A* Routing| BE
+    DF[Data Feeder<br/>15K CSV Records] -->|Insert| DB
+    DF -->|Predict| ML
 ```
 
 ### 🛠️ Tech Stack
-- **Backend**: FastAPI (Python 3.10+), Motor (Async MongoDB), WebSockets.
-- **Intelligence**: Scikit-Learn (Random Forest), Pandas, Joblib.
-- **Frontend**: React/Vanilla JS, Leaflet.js, Vanta.js (Landing), GSAP (Scroll Animations).
-- **Orchestration**: Docker & Docker Compose.
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | React 18, TypeScript, Vite, Leaflet.js, GSAP, Vanta.js |
+| **Backend** | FastAPI, Motor (Async MongoDB), NetworkX, httpx |
+| **ML Service** | LightGBM, TensorFlow/Keras (LSTM), scikit-learn |
+| **Database** | MongoDB |
+| **Orchestration** | Docker & Docker Compose |
 
 ---
 
 ## 📁 Project Structure
 
-- `backend/`: Principal API and decision engine logic.
-- `ml-service/`: Microservice for real-time traffic prediction.
-- `frontend/`: Interactive map and storytelling landing page.
-- `simulate_traffic.py`: Root-level telemetry generator for demonstration.
-- `docker-compose.yml`: One-click orchestration for the entire stack.
+```
+PreClear/
+├── backend/                    # FastAPI backend
+│   ├── main.py                 # App entrypoint & lifespan
+│   ├── routes/                 # API route handlers
+│   │   ├── health.py           # Health check
+│   │   ├── traffic.py          # Traffic CRUD & heatmap
+│   │   ├── predict.py          # ML prediction proxy
+│   │   └── routing.py          # A* optimal routing
+│   ├── services/
+│   │   ├── traffic_service.py  # MongoDB traffic operations
+│   │   ├── routing_service.py  # A* pathfinding with NetworkX
+│   │   ├── data_feeder.py      # Background CSV data feeder
+│   │   └── ml_service.py       # ML service HTTP client
+│   ├── data/                   # CSV dataset for live feeding
+│   ├── core/config.py          # Environment settings
+│   └── Dockerfile
+├── ml-service/                 # ML microservice
+│   ├── main.py                 # FastAPI prediction endpoints
+│   ├── model/                  # Trained model artifacts
+│   │   ├── lgbm_traffic_classifier.txt
+│   │   ├── lstm_traffic_forecaster.keras
+│   │   └── *.pkl               # Scalers & feature lists
+│   ├── utils/preprocessing.py  # Feature engineering
+│   └── Dockerfile
+├── frontend/                   # React + Vite application
+│   ├── src/
+│   │   ├── components/Map/     # Reusable Leaflet map
+│   │   ├── pages/
+│   │   │   ├── RoutePlanner/   # Route planning + map
+│   │   │   ├── TrafficData/    # Live heatmap dashboard
+│   │   │   ├── LoginPage/      # Yeti login animation
+│   │   │   └── AboutPage/      # About page
+│   │   └── App.tsx             # Router
+│   └── package.json
+├── docker-compose.yml          # Full stack orchestration
+└── README.md
+```
 
 ---
 
@@ -66,7 +97,7 @@ graph LR
 
 ### Prerequisites
 - [Docker](https://www.docker.com/get-started) & [Docker Compose](https://docs.docker.com/compose/install/)
-- [Python 3.10+](https://www.python.org/downloads/) (for local simulation)
+- [Node.js 18+](https://nodejs.org/) (for frontend dev)
 
 ### 1. Clone the Repository
 ```bash
@@ -74,39 +105,70 @@ git clone https://github.com/Rugpullers/PreClear.git
 cd PreClear
 ```
 
-### 2. Launch Services
+### 2. Launch Backend Services
 Run the full stack (Backend, ML Service, and MongoDB) with a single command:
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 
-### 3. Start Traffic Simulation
-In a separate terminal, trigger the telemetry generator:
+This starts:
+- **Backend API** — `http://localhost:8000` (Swagger docs at `/docs`)
+- **ML Service** — `http://localhost:8001`
+- **MongoDB** — `localhost:27017`
+- **Data Feeder** — auto-starts after 5 seconds, cycling through 15,000 CSV records
+
+### 3. Launch Frontend
 ```bash
-python simulate_traffic.py
+cd frontend
+npm install
+npm run dev
 ```
+Frontend runs at `http://localhost:5173`
 
 ### 4. Access the Platform
-- **Landing Page**: Open `frontend/index.html` in your browser.
-- **Live Map**: Open `frontend/heatmap.html`.
-- **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+| Page | URL | Description |
+|------|-----|-------------|
+| Scroll Intro | `http://localhost:5173/` | Sky-to-street animation landing |
+| Home | `http://localhost:5173/home` | Main dashboard with sidebar |
+| Route Planner | `http://localhost:5173/route-planner` | A* routing with live map |
+| Traffic Heatmap | `http://localhost:5173/traffic-data` | Live congestion heatmap |
+| Login | `http://localhost:5173/login` | Yeti login animation |
+| API Docs | `http://localhost:8000/docs` | Swagger/OpenAPI |
 
 ---
 
-## 💡 MVP Demo Script
-1. **The Hook**: Watch the "Sky-to-Street" landing animation.
-2. **Real-time Map**: Observe junctions turning 🟢, 🟠, or 🔴 based on telemetry.
-3. **Emergency Scenario**: Click **"Trigger Ambulance"** and watch the system forcefully clear the route.
-4. **Predictive Impact**: Compare current density vs. predicted congestion to see the AI advantage.
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Backend health check |
+| `GET` | `/traffic-data` | Fetch traffic records |
+| `POST` | `/traffic-data` | Insert traffic data |
+| `GET` | `/traffic-status` | Latest congestion level per junction |
+| `GET` | `/traffic-heatmap` | Aggregated heatmap data (latest per junction) |
+| `POST` | `/predict` | ML congestion prediction (proxied to ML service) |
+| `GET` | `/optimal-route` | A* optimal route between two junctions |
+| `GET` | `/junctions` | List all 10 available junctions |
+| `GET` | `/feeder/status` | Data feeder status |
+| `POST` | `/feeder/start` | Start data feeder |
+| `POST` | `/feeder/stop` | Stop data feeder |
+
+---
+
+## 💡 Demo Script
+1. **The Hook**: Navigate to `/` — watch the scroll-driven landing animation.
+2. **Real-time Heatmap**: Go to `/traffic-data` — observe junctions turning 🟢, 🟡, or 🔴 every 5 seconds.
+3. **Route Planning**: Go to `/route-planner` — select Hebbal Flyover → Electronic City Flyover → see the route drawn on real roads with ETA and congestion badges.
+4. **Emergency Mode**: Click the 🚑 Ambulance button to simulate priority routing.
 
 ---
 
 ## 🏆 The PreClear Advantage
-> “We don’t just react to traffic — we predict it and clear the path for those who need it most.”
+> "We don't just react to traffic — we predict it and clear the path for those who need it most."
 
 ---
 
 ## 👥 Team & Contribution
-Developed during a high-stakes hackathon by the PreClear Team. 
+Developed during a high-stakes hackathon by the PreClear Team.
 
 **License**: [MIT](LICENSE)
