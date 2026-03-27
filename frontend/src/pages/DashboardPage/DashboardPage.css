@@ -1,0 +1,403 @@
+/* DashboardPage.css — Glassmorphism dashboard with stats, table, actions */
+
+.dash-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.dash-layout {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px 28px 40px;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.dash-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dash-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dash-title {
+    margin: 0;
+    font-size: 2em;
+    font-weight: 800;
+    color: #000;
+    letter-spacing: -0.5px;
+    text-transform: none;
+}
+
+.dash-subtitle {
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.55);
+    font-weight: 400;
+    letter-spacing: 0.2px;
+}
+
+.dash-back-btn {
+    padding: 0.5em 1.4em;
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.5em;
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 0.85em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.dash-back-btn:hover {
+    background: rgba(78, 184, 221, 0.2);
+    border-color: rgba(78, 184, 221, 0.5);
+    color: #000;
+}
+
+/* ── Stats Row ──────────────────────────────────────────── */
+.dash-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.dash-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 22px;
+    background: rgba(30, 39, 46, 0.12);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1em;
+    box-shadow:
+        0 8px 28px -6px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: dashCardIn 0.5s ease-out both;
+}
+
+.dash-stat-card:nth-child(1) { animation-delay: 0s; }
+.dash-stat-card:nth-child(2) { animation-delay: 0.07s; }
+.dash-stat-card:nth-child(3) { animation-delay: 0.14s; }
+.dash-stat-card:nth-child(4) { animation-delay: 0.21s; }
+
+@keyframes dashCardIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.dash-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 14px 38px -8px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dash-stat-icon {
+    font-size: 1.8em;
+    line-height: 1;
+}
+
+.dash-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dash-stat-value {
+    font-size: 1.5em;
+    font-weight: 800;
+    color: #000;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.dash-stat-alert {
+    color: #ef4444;
+}
+
+.dash-stat-label {
+    font-size: 0.72em;
+    color: rgba(0, 0, 0, 0.55);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* ── Main Grid ──────────────────────────────────────────── */
+.dash-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 18px;
+}
+
+.dash-card {
+    background: rgba(30, 39, 46, 0.12);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.1em;
+    padding: 22px 26px;
+    box-shadow:
+        0 12px 36px -8px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: dashCardIn 0.5s ease-out 0.25s both;
+}
+
+.dash-card--wide {
+    grid-row: 1 / 3;
+}
+
+.dash-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.dash-card-header h3 {
+    margin: 0;
+    font-size: 1.05em;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.9);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.dash-card-badge {
+    font-size: 0.65em;
+    font-weight: 600;
+    padding: 0.2em 0.7em;
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 1em;
+    color: #4ade80;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+
+/* ── Junction Table ─────────────────────────────────────── */
+.dash-table-wrap {
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 0.6em;
+}
+
+.dash-table-wrap::-webkit-scrollbar {
+    width: 5px;
+}
+
+.dash-table-wrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dash-table-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+.dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+}
+
+.dash-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.dash-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.72em;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dash-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    color: rgba(0, 0, 0, 0.8);
+    vertical-align: middle;
+}
+
+.dash-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.dash-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.dash-table-name {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.dash-table-empty {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.4);
+    padding: 32px 12px !important;
+    font-style: italic;
+}
+
+/* Density bar */
+.dash-density-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.dash-density-bar {
+    height: 6px;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 3px;
+}
+
+.dash-density-text {
+    font-size: 0.78em;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 32px;
+}
+
+/* Status badge */
+.dash-status-badge {
+    display: inline-block;
+    font-size: 0.65em;
+    font-weight: 700;
+    padding: 0.2em 0.55em;
+    border-radius: 0.35em;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ── Quick Actions ──────────────────────────────────────── */
+.dash-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.dash-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 18px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.7em;
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 0.82em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.dash-action-btn:hover {
+    background: rgba(78, 184, 221, 0.15);
+    border-color: rgba(78, 184, 221, 0.35);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -6px rgba(78, 184, 221, 0.2);
+}
+
+.dash-action-icon {
+    font-size: 1.6em;
+    line-height: 1;
+}
+
+/* ── System Info ────────────────────────────────────────── */
+.dash-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.dash-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 0.82em;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.dash-info-row:last-child {
+    border-bottom: none;
+}
+
+.dash-info-row span:last-child {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.dash-info-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.9em;
+    color: #1a7a9a !important;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .dash-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dash-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-card--wide {
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .dash-stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-layout {
+        padding: 16px 14px 32px;
+    }
+}

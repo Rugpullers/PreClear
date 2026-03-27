@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import RoutePlanner from "./pages/RoutePlanner/RoutePlanner";
 import TrafficData from "./pages/TrafficData/TrafficData";
 import AboutPage from "./pages/AboutPage/AboutPage";
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ScrollAnimation from "./components/ScrollAnimation";
 import "./App.css";
 
@@ -16,6 +18,8 @@ function App() {
         {/* Full landing page with Navbar, Sidebar, Clouds, features, etc. */}
         <Route path="/home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/route-planner" element={<RoutePlanner />} />
         <Route path="/traffic-data" element={<TrafficData />} />
         <Route path="/about" element={<AboutPage />} />

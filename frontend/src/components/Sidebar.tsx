@@ -3,12 +3,14 @@ import React from "react";
 interface Props {
     isOpen: boolean;
     closeSidebar: () => void;
+    onDashboardClick: () => void;
     onRoutePlannerClick: () => void;
     onTrafficDataClick: () => void;
     onAboutClick: () => void;
+    onSettingsClick: () => void;
 }
 
-const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, onTrafficDataClick, onAboutClick }) => {
+const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onDashboardClick, onRoutePlannerClick, onTrafficDataClick, onAboutClick, onSettingsClick }) => {
     return (
         <>
             {/* Overlay — click to close sidebar */}
@@ -20,11 +22,11 @@ const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, o
             {/* Sidebar panel */}
             <aside className={`sidebar ${isOpen ? "open" : ""}`}>
                 <ul>
-                    <li onClick={closeSidebar}>Dashboard</li>
+                    <li onClick={onDashboardClick}>Dashboard</li>
                     <li onClick={onTrafficDataClick}>Traffic Data</li>
                     <li onClick={onRoutePlannerClick}>Route Planner</li>
                     <li onClick={onAboutClick}>About</li>
-                    <li>Settings</li>
+                    <li onClick={onSettingsClick}>Settings</li>
                 </ul>
             </aside>
         </>
@@ -32,3 +34,4 @@ const Sidebar: React.FC<Props> = ({ isOpen, closeSidebar, onRoutePlannerClick, o
 };
 
 export default Sidebar;
+

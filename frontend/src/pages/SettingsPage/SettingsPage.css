@@ -1,0 +1,405 @@
+/* SettingsPage.css — Sidebar + Content settings layout */
+
+.settings-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.settings-layout {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 28px 40px;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.settings-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.settings-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-title {
+    margin: 0;
+    font-size: 2em;
+    font-weight: 800;
+    color: #000;
+    letter-spacing: -0.5px;
+    text-transform: none;
+}
+
+.settings-subtitle {
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.55);
+    font-weight: 400;
+}
+
+.settings-back-btn {
+    padding: 0.5em 1.4em;
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.5em;
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 0.85em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.settings-back-btn:hover {
+    background: rgba(78, 184, 221, 0.2);
+    border-color: rgba(78, 184, 221, 0.5);
+    color: #000;
+}
+
+/* ── Body: sidebar + content ────────────────────────────── */
+.settings-body {
+    display: flex;
+    gap: 20px;
+    min-height: 500px;
+}
+
+/* ── Nav sidebar ────────────────────────────────────────── */
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 220px;
+    flex-shrink: 0;
+    background: rgba(30, 39, 46, 0.12);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1em;
+    padding: 12px;
+    box-shadow:
+        0 8px 28px -6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    align-self: flex-start;
+}
+
+.settings-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.6em;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.88em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.settings-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.settings-nav-btn--active {
+    background: rgba(78, 184, 221, 0.12);
+    border-color: rgba(78, 184, 221, 0.3);
+    color: #1a7a9a;
+    font-weight: 600;
+}
+
+.settings-nav-icon {
+    font-size: 1.15em;
+    line-height: 1;
+}
+
+/* ── Content area ───────────────────────────────────────── */
+.settings-content {
+    flex: 1;
+    min-width: 0;
+    background: rgba(30, 39, 46, 0.12);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1em;
+    padding: 28px 32px;
+    box-shadow:
+        0 12px 36px -8px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: settingsContentIn 0.35s ease-out;
+}
+
+@keyframes settingsContentIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Shared subpage styles ──────────────────────────────── */
+.sp-section {
+    margin-bottom: 28px;
+}
+
+.sp-section:last-child {
+    margin-bottom: 0;
+}
+
+.sp-section-title {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.9);
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.sp-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.sp-field:last-child {
+    border-bottom: none;
+}
+
+.sp-field-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sp-field-label span:first-child {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.sp-field-hint {
+    font-size: 0.75em;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+/* Input */
+.sp-input {
+    padding: 0.55em 0.8em;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.4em;
+    color: #000;
+    font-size: 0.88em;
+    font-family: inherit;
+    min-width: 200px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sp-input:focus {
+    outline: none;
+    border-color: rgba(78, 184, 221, 0.5);
+    box-shadow: 0 0 0 2px rgba(78, 184, 221, 0.12);
+}
+
+/* Toggle switch */
+.sp-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.sp-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.sp-toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.sp-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.sp-toggle input:checked + .sp-toggle-slider {
+    background: rgba(78, 184, 221, 0.5);
+}
+
+.sp-toggle input:checked + .sp-toggle-slider::before {
+    transform: translateX(20px);
+    background: #4eb8dd;
+}
+
+/* Select */
+.sp-select {
+    padding: 0.55em 0.8em;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.4em;
+    color: #000;
+    font-size: 0.88em;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 160px;
+    transition: border-color 0.2s ease;
+}
+
+.sp-select:focus {
+    outline: none;
+    border-color: rgba(78, 184, 221, 0.5);
+}
+
+.sp-select option {
+    background: #fff;
+    color: #000;
+}
+
+/* Save button */
+.sp-save-btn {
+    display: inline-block;
+    padding: 0.6em 2em;
+    margin-top: 8px;
+    background: linear-gradient(135deg, rgba(78, 184, 221, 0.7), rgba(33, 112, 147, 0.7));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.5em;
+    color: #fff;
+    font-size: 0.92em;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.sp-save-btn:hover {
+    background: linear-gradient(135deg, rgba(78, 184, 221, 0.9), rgba(33, 112, 147, 0.9));
+    box-shadow: 0 6px 20px rgba(78, 184, 221, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Color options */
+.sp-color-options {
+    display: flex;
+    gap: 10px;
+}
+
+.sp-color-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sp-color-circle:hover {
+    transform: scale(1.15);
+}
+
+.sp-color-circle--active {
+    border-color: #fff;
+    box-shadow: 0 0 12px rgba(78, 184, 221, 0.4);
+    transform: scale(1.1);
+}
+
+/* Danger zone */
+.sp-danger-zone {
+    padding: 16px 20px;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 0.6em;
+}
+
+.sp-danger-btn {
+    padding: 0.5em 1.4em;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 0.4em;
+    color: #fca5a5;
+    font-size: 0.85em;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.sp-danger-btn:hover {
+    background: rgba(239, 68, 68, 0.35);
+    color: #fff;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 760px) {
+    .settings-body {
+        flex-direction: column;
+    }
+
+    .settings-nav {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        align-self: stretch;
+        padding: 8px;
+        gap: 4px;
+    }
+
+    .settings-nav-btn {
+        white-space: nowrap;
+        padding: 10px 12px;
+        font-size: 0.82em;
+    }
+
+    .settings-content {
+        padding: 20px 18px;
+    }
+
+    .sp-field {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .sp-input,
+    .sp-select {
+        width: 100%;
+        min-width: 0;
+    }
+}

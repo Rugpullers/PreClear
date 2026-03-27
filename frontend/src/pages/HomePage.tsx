@@ -29,6 +29,14 @@ function HomePage() {
     }
   };
 
+  const handleDashboardClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/dashboard");
+    }, 2000);
+  };
+
   const handleRoutePlannerClick = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -53,6 +61,14 @@ function HomePage() {
     }, 2000);
   };
 
+  const handleSettingsClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/settings");
+    }, 2000);
+  };
+
   return (
     <>
       <Clouds />
@@ -65,9 +81,11 @@ function HomePage() {
       <Sidebar
         isOpen={isSidebarOpen}
         closeSidebar={closeSidebar}
+        onDashboardClick={handleDashboardClick}
         onRoutePlannerClick={handleRoutePlannerClick}
         onTrafficDataClick={handleTrafficDataClick}
         onAboutClick={handleAboutClick}
+        onSettingsClick={handleSettingsClick}
       />
       <main className="main-content">
         {/* Home content can go here */}
@@ -78,3 +96,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
